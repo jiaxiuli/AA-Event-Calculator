@@ -1,0 +1,15 @@
+.event-container {
+    margin: 12px;
+    text-align: left;
+    padding: 12px;
+
+    .participants-container {
+        margin-top: 24px;
+        padding: 8px;
+
+        .per-participant-spend-container {
+            padding: 12px 0px 12px 0px;
+            display: flex;
+        }
+    }
+}
