@@ -2,7 +2,7 @@
  * @Author: Leo
  * @Date: 2023-07-04 12:39:55
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-04 21:48:47
+ * @LastEditTime: 2023-07-04 22:18:50
  * @FilePath: \event-calculator\src\Class\Participant.js
  * @Description: 
  */
@@ -15,7 +15,7 @@ const Participant = class {
         this.id = uuidv4();
         this.name = name;
         this.spendList = spendList;
-        this.totalSpend = (spendList.reduce((sum, next) => sum + next.value, 0)).toFixed(2);
+        this.totalSpend = Number(spendList.reduce((sum, next) => sum + next.value, 0).toFixed(2));
     }
 
     editParticipant = (newParticipant) => {
@@ -28,7 +28,7 @@ const Participant = class {
             this.totalSpend = 0;
         } else {
             this.spendList = newParticipant.spendList;
-            this.totalSpend = (this.spendList.reduce((sum, next) => sum + next.value, 0)).toFixed(2);
+            this.totalSpend = Number(this.spendList.reduce((sum, next) => sum + next.value, 0).toFixed(2));
         }
     }
 }
