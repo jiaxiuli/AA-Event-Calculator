@@ -2,7 +2,7 @@
  * @Author: Leo
  * @Date: 2023-07-04 12:34:13
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-04 16:17:00
+ * @LastEditTime: 2023-07-04 19:53:21
  * @FilePath: \event-calculator\src\Class\Event.js
  * @Description:
  */

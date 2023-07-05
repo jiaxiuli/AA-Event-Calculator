@@ -2,7 +2,7 @@
  * @Author: Leo
  * @Date: 2023-07-04 12:47:59
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-04 15:49:21
+ * @LastEditTime: 2023-07-04 20:50:35
  * @FilePath: \event-calculator\src\Components\Event\Event.js
  * @Description:
  */
@@ -17,19 +17,25 @@ import TagFacesIcon from '@mui/icons-material/TagFaces';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { useDispatch } from 'react-redux';
-import { removeParticipantFromEvent } from '../../Redux/Slice/eventSlice';
+import EditIcon from '@mui/icons-material/Edit';
+import { removeEvent, removeParticipantFromEvent, editParticipant } from '../../Redux/Slice/eventSlice';
 import React from 'react';
 import './Event.scss';
 
 const EventContainer = (props) => {
 
-    console.log(props)
-
     const [isAddOpen, setIsAddOpen] = React.useState(false);
+    const [participantInfo, setParticipantInfo] = React.useState();
     const dispatch = useDispatch();
 
     const addParticipant = () => {
+        setParticipantInfo(null);
+        openDialog();
+    }
+
+    const openDialog = () => {
         setIsAddOpen(true);
     }
 
@@ -37,27 +43,57 @@ const EventContainer = (props) => {
         setIsAddOpen(false);
     }
 
-    const handleDelete = () => {}
+    const handleDeleteAmount = (spend, person) => {
+        dispatch(editParticipant({
+            prevPart: person,
+            currentPart: {
+                ...person,
+                spendList: person.spendList.filter((item) => item.key !== spend.key)
+            }
+        }));
+    }
 
     const handleRemoveParticipant = (person) => {
         dispatch(removeParticipantFromEvent({
             event: props.eventInfo,
             participantId: person.id
-        }))
+        }));
+    }
+
+    const handleRemoveEvent = () => {
+        dispatch(removeEvent({eventId: props.eventInfo.id}));
+    }
+
+    const handleEditParticipant = (person) => {
+        openDialog();
+        setParticipantInfo(person);
     }
 
     return (
         <Paper className='event-container' elevation={3}>
-            <Chip label={props.eventInfo.name} color="primary" icon={<TagFacesIcon />}/>
+            <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                <Chip label={props.eventInfo.name} color="primary" icon={<TagFacesIcon />}/>
+                <IconButton aria-label="delete" onClick={handleRemoveEvent}>
+                    <HighlightOffIcon />
+                </IconButton>
+            </Box>
             <Box className='participants-container'>
                 {
                     props.eventInfo.participants.map((person) => (
                         <Box key={person.id} className='per-participant-container'>
                             <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                                <Chip label={person.name} color="success" size="small" icon={<PersonIcon />}/>
-                                <IconButton aria-label="delete" color="error" onClick={() => handleRemoveParticipant(person)}>
-                                    <DeleteIcon />
-                                </IconButton>
+                                <Box>
+                                    <Chip label={person.name} color="success" size="small" sx={{mr: 1}} icon={<PersonIcon />}/>
+                                    <Chip label={'Total: ' + person.totalSpend} color="primary" variant="outlined" size="small"  icon={<AttachMoneyIcon />}/>
+                                </Box>
+                                <Box>
+                                    <IconButton color="info" onClick={() => handleEditParticipant(person)}>
+                                        <EditIcon />
+                                    </IconButton>
+                                    <IconButton aria-label="delete" color="error" onClick={() => handleRemoveParticipant(person)}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Box>
                             </Box>
                             <Box className='per-participant-spend-container'>
                                 {
@@ -67,7 +103,7 @@ const EventContainer = (props) => {
                                                 label={spend.value}
                                                 size="small"
                                                 icon={<AttachMoneyIcon />}
-                                                onDelete={handleDelete}
+                                                onDelete={() => handleDeleteAmount(spend, person)}
                                                 sx={{mr: 1}}
                                             />
                                         </Box>
@@ -80,7 +116,12 @@ const EventContainer = (props) => {
                 }
             </Box>
             <Button onClick={addParticipant}>添加参与者</Button>
-            <AddParticipantDialog open={isAddOpen} event={props.eventInfo} closeDialog={closeDialog}/>
+            <AddParticipantDialog
+                open={isAddOpen}
+                event={props.eventInfo}
+                closeDialog={closeDialog}
+                participantInfo={participantInfo}
+            />
         </Paper>
     );
 };

@@ -2,7 +2,7 @@
  * @Author: Leo
  * @Date: 2023-07-04 13:30:17
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-04 15:45:50
+ * @LastEditTime: 2023-07-04 20:27:59
  * @FilePath: \event-calculator\src\Components\AddParticipantDialog\AddParticipantDialog.js
  * @Description:
  */
@@ -21,20 +21,33 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { v4 as uuidv4 } from 'uuid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Participant from '../../Class/Participant';
+import CloseIcon from '@mui/icons-material/Close';
+import Alert from '@mui/material/Alert';
 import { useDispatch } from 'react-redux';
-import { addParticipantToEvent } from '../../Redux/Slice/eventSlice';
+import { addParticipantToEvent, editParticipant } from '../../Redux/Slice/eventSlice';
 import './dialog.scss';
 
 
 const AddParticipantDialog = (props) => {
 
     const [name, setName] = React.useState("");
+    const [nameValid, setNameValid] = React.useState(true);
     const [spendList, setSpendList] = React.useState([]);
 
     const dispatch = useDispatch();
 
+    React.useEffect(() => {
+        if (props.participantInfo) {
+            setName(props.participantInfo.name);
+            setSpendList(props.participantInfo.spendList);
+        } else {
+            clearForm();
+        }
+    }, [props]);
+
     const handleEditName = (event) => {
         setName(event.target.value);
+        setNameValid(true);
     }
 
     const handleAddSpendAmount = () => {
@@ -48,10 +61,13 @@ const AddParticipantDialog = (props) => {
     }
 
     const handleEditAmount = (event, item) => {
-        setSpendList((prev) => {
-            item.value = event.target.value;
-            return [...prev];
-        });
+        var reg = /^[0-9]+\.?[0-9]*$/;
+        if (reg.test(event.target.value) || event.target.value === '') {
+            setSpendList((prev) => {
+                item.value = Number(event.target.value);
+                return [...prev];
+            });
+        }
     }
 
     const handleDeleteAmount = (item) => {
@@ -61,13 +77,40 @@ const AddParticipantDialog = (props) => {
     }
 
     const handleCompleteAddParticipant = () => {
-        const participant = new Participant(name, spendList);
-        dispatch(addParticipantToEvent({
-            event: props.event,
-            participant
-        }));
-        props.closeDialog();
-        clearForm();
+        if (!name) {
+            setNameValid(false);
+            return;
+        }
+        const clearedSpendList = clearSpendList();
+
+        if (props.participantInfo) { // edit participant
+            dispatch(editParticipant({
+                prevPart: props.participantInfo,
+                currentPart: {
+                    ...props.participantInfo,
+                    name,
+                    spendList: clearedSpendList
+                }
+            }));
+        } else { // add new participant
+            const participant = new Participant(name, clearedSpendList);
+            dispatch(addParticipantToEvent({
+                event: props.event,
+                participant
+            }));
+        }
+        closeDialog();
+    }
+
+    const clearSpendList = () => {
+        const newList = spendList.filter((item) => Number(item.value));
+        if (!newList.length) {
+            newList.push({
+                key: uuidv4(),
+                value: 0
+            });
+        }
+        return newList;
     }
 
     const clearForm = () => {
@@ -75,10 +118,20 @@ const AddParticipantDialog = (props) => {
         setSpendList([]);
     }
 
+    const closeDialog = () => {
+        clearForm();
+        props.closeDialog();
+    }
+
     return (
         <Dialog open={props.open}>
             <Box className='add-participant-dialog-main'>
-                <DialogTitle sx={{fontSize: 16, textAlign: 'center'}}>添加参与者</DialogTitle>
+                <DialogTitle sx={{fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingX: 0}}>
+                    <Box>{props.participantInfo ? '编辑参与者' : '添加参与者'}</Box>
+                    <IconButton onClick={closeDialog}>
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
                 <FormGroup variant="standard">
                     <Box sx={{mb: 4}}>
                         <InputLabel sx={{fontSize: 12}}>
@@ -87,10 +140,13 @@ const AddParticipantDialog = (props) => {
                         <Input
                             id="input-participant-name"
                             value={name}
+                            error={!nameValid}
                             onChange={handleEditName}
+                            sx={{width: '100%'}}
+                            autoComplete='off'
                             startAdornment={
                                 <InputAdornment position="start">
-                                    <AccountCircle />
+                                    <AccountCircle color={nameValid ? '' : 'error'}/>
                                 </InputAdornment>
                             }
                         />
@@ -106,6 +162,7 @@ const AddParticipantDialog = (props) => {
                                     <Input
                                         id="input-participant-spend-amount"
                                         type="number"
+                                        autoComplete='off'
                                         value={item.value}
                                         onChange={(event) => handleEditAmount(event, item)}
                                         startAdornment={
@@ -126,8 +183,22 @@ const AddParticipantDialog = (props) => {
                         <Button onClick={handleAddSpendAmount} sx={{mb: 2, width: 'fit-content'}}>添加花费金额</Button>
                     </Box>
                 </FormGroup>
-                <Button variant="contained" onClick={handleCompleteAddParticipant} sx={{mb: 2}}>完成</Button>
+                <Button variant="contained" onClick={handleCompleteAddParticipant} sx={{mb: 2}}>{props.participantInfo ? '完成编辑' : '完成添加'}</Button>
             </Box>
+            <Alert
+                sx={{
+                    position: 'fixed',
+                    visibility: nameValid ? 'hidden' : 'visible',
+                    top: 20,
+                    zIndex: 2,
+                    left: '50%',
+                    whiteSpace: "nowrap",
+                    transform: "translateX(-50%)"
+                }}
+                severity="error"
+            >
+                Name cannot be empty
+            </Alert>
         </Dialog>
       );
 };
