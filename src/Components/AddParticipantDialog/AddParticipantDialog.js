@@ -64,7 +64,7 @@ const AddParticipantDialog = (props) => {
         var reg = /^[0-9]+\.?[0-9]*$/;
         if (reg.test(event.target.value) || event.target.value === '') {
             setSpendList((prev) => {
-                item.value = Number(event.target.value);
+                item.value = event.target.value === '' ? '' : Number(event.target.value);
                 return [...prev];
             });
         }
