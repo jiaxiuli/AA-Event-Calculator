@@ -2,7 +2,7 @@
  * @Author: Leo
  * @Date: 2023-07-04 12:39:55
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-04 22:18:50
+ * @LastEditTime: 2023-07-05 20:19:16
  * @FilePath: \event-calculator\src\Class\Participant.js
  * @Description: 
  */
@@ -11,11 +11,12 @@ import { v4 as uuidv4 } from 'uuid';
 
 const Participant = class {
 
-    constructor(name, spendList) {
-        this.id = uuidv4();
+    constructor(name, spendList, id) {
+        this.id = id || uuidv4();
         this.name = name;
         this.spendList = spendList;
         this.totalSpend = Number(spendList.reduce((sum, next) => sum + next.value, 0).toFixed(2));
+        this.isCommonParticipant = Boolean(id);
     }
 
     editParticipant = (newParticipant) => {

@@ -2,7 +2,7 @@
  * @Author: Leo
  * @Date: 2023-07-04 20:33:55
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-04 21:40:21
+ * @LastEditTime: 2023-07-05 19:40:07
  * @FilePath: \event-calculator\src\Class\Calculate.js
  * @Description:
  */
@@ -13,7 +13,10 @@ import { v4 as uuidv4 } from 'uuid';
 const calculate = (events) => {
 
     const overallResult = events.map((event) => {
-        const result = [];
+        const result = {
+            info: {},
+            list: []
+        };
         const numberOfParticipant = event.participants.length;
         let totalSpend = 0;
         event.participants.forEach(item => {
@@ -29,26 +32,31 @@ const calculate = (events) => {
                 personSpendMost = item;
             }
         });
+        result.info.averageSpend = averageSpend;
+        result.info.personSpendMost = personSpendMost;
         event.participants.forEach((item) => {
             if (item.id !== personSpendMost.id) {
                 if (averageSpend - item.totalSpend >= 0) {
-                    result.push({
+                    result.list.push({
                         key: uuidv4(),
-                        sender: item.name,
-                        receiver: personSpendMost.name,
+                        sender: item,
+                        receiver: personSpendMost,
                         value: (averageSpend - item.totalSpend).toFixed(2)
                     });
                 } else {
-                    result.push({
+                    result.list.push({
                         key: uuidv4(),
-                        sender: personSpendMost.name,
-                        receiver: item.name,
+                        sender: personSpendMost,
+                        receiver: item,
                         value: (item.totalSpend - averageSpend).toFixed(2)
                     });
                 }
             }
         });
-        return {event, result};
+        return {
+            event,
+            result
+        };
     });
 
     return overallResult;

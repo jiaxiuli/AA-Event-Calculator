@@ -2,15 +2,24 @@
  * @Author: Leo
  * @Date: 2023-07-04 12:22:12
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-04 21:38:33
+ * @LastEditTime: 2023-07-05 20:09:26
  * @FilePath: \event-calculator\src\Redux\Slice\eventSlice.js
  * @Description:
  */
 import { createSlice } from '@reduxjs/toolkit'
+import Participant from '../../Class/Participant';
 
 const initialState = {
   eventList: [],
-  eventCounter: 0
+  eventCounter: 0,
+  commonParticipant: [
+    new Participant('BBD', [], 'bbd'),
+    new Participant('咪咪', [], 'mimi'),
+    new Participant('Nancy', [], 'nancy'),
+    new Participant('Kerry', [], 'kerry'),
+    new Participant('华哥', [], 'keith'),
+    new Participant('S哥', [], 'stanley'),
+  ]
 }
 
 export const eventSlice = createSlice({
