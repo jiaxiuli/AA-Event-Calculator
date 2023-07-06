@@ -2,7 +2,7 @@
  * @Author: Leo
  * @Date: 2023-07-05 20:01:31
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-05 20:36:37
+ * @LastEditTime: 2023-07-05 20:37:46
  * @FilePath: \event-calculator\src\Components\CommonParticipantListDialog\CommonParticipantList.js
  * @Description:
  */
@@ -40,6 +40,10 @@ const CommonParticipantList = (props) => {
     setChecked(newChecked);
   };
 
+  const handleCompleteSelection = () => {
+    props.closeDialog();
+  };
+
   return (
     <Dialog open={props.open}>
       <Box className="add-common-participant-dialog-main">
@@ -73,7 +77,9 @@ const CommonParticipantList = (props) => {
           </List>
         </Box>
       </Box>
-      <Button variant="contained">计算</Button>
+      <Button variant="contained" onClick={handleCompleteSelection}>
+        完成
+      </Button>
     </Dialog>
   );
 };

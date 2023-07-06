@@ -2,7 +2,7 @@
  * @Author: Leo
  * @Date: 2023-07-04 12:47:59
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-05 20:31:27
+ * @LastEditTime: 2023-07-05 20:37:33
  * @FilePath: \event-calculator\src\Components\Event\Event.js
  * @Description:
  */
@@ -180,7 +180,7 @@ const EventContainer = (props) => {
       />
       <CommonParticipantList
         open={isCommonOpen}
-        closeAddParticipantDialog={closeCommonParticipantDialog}
+        closeDialog={closeCommonParticipantDialog}
       />
     </Paper>
   );
