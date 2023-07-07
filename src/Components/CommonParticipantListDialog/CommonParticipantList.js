@@ -2,7 +2,7 @@
  * @Author: Leo
  * @Date: 2023-07-05 20:01:31
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-05 20:37:46
+ * @LastEditTime: 2023-07-06 20:46:05
  * @FilePath: \event-calculator\src\Components\CommonParticipantListDialog\CommonParticipantList.js
  * @Description:
  */
@@ -19,7 +19,8 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import CommentIcon from "@mui/icons-material/Comment";
 import Button from "@mui/material/Button";
-import { useSelector } from "react-redux";
+import { updateCommonParticipantsByList } from "../../Redux/Slice/eventSlice";
+import { useSelector, useDispatch } from "react-redux";
 
 import "./CommonParticipantList.scss";
 
@@ -28,12 +29,24 @@ const CommonParticipantList = (props) => {
 
   const [checked, setChecked] = React.useState([]);
 
+  React.useEffect(() => {
+    const currentList = [];
+    props.event.participants.forEach((part) => {
+      if (part.isCommonParticipant) {
+        currentList.push({ ...part });
+      }
+    });
+    setChecked(currentList);
+  }, [props.event.participants]);
+
+  const dispatch = useDispatch();
+
   const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
+    const currentIndex = checked.findIndex((item) => value.id === item.id);
     const newChecked = [...checked];
 
     if (currentIndex === -1) {
-      newChecked.push(value);
+      newChecked.push({ ...value });
     } else {
       newChecked.splice(currentIndex, 1);
     }
@@ -41,6 +54,12 @@ const CommonParticipantList = (props) => {
   };
 
   const handleCompleteSelection = () => {
+    dispatch(
+      updateCommonParticipantsByList({
+        event: props.event,
+        participantList: [...checked],
+      })
+    );
     props.closeDialog();
   };
 
@@ -49,9 +68,6 @@ const CommonParticipantList = (props) => {
       <Box className="add-common-participant-dialog-main">
         <DialogTitle sx={{ textAlign: "center" }}>选择常用参与者</DialogTitle>
         <Box>
-          {/* {
-                        commonList.map((person) => (<div>{person.name}</div>))
-                    } */}
           <List sx={{ width: "100%", bgcolor: "background.paper" }}>
             {commonList.map((value) => (
               <ListItem
@@ -67,7 +83,9 @@ const CommonParticipantList = (props) => {
                   <ListItemIcon>
                     <Checkbox
                       edge="start"
-                      checked={checked.indexOf(value) !== -1}
+                      checked={
+                        checked.findIndex((item) => value.id === item.id) !== -1
+                      }
                     />
                   </ListItemIcon>
                   <ListItemText id={value.id} primary={value.name} />
@@ -77,9 +95,22 @@ const CommonParticipantList = (props) => {
           </List>
         </Box>
       </Box>
-      <Button variant="contained" onClick={handleCompleteSelection}>
-        完成
-      </Button>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          mb: 4,
+        }}
+      >
+        <Button
+          sx={{ width: "60%" }}
+          variant="contained"
+          onClick={handleCompleteSelection}
+        >
+          完成
+        </Button>
+      </Box>
     </Dialog>
   );
 };

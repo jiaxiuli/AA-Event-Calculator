@@ -2,7 +2,7 @@
  * @Author: Leo
  * @Date: 2023-07-04 12:47:59
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-05 20:37:33
+ * @LastEditTime: 2023-07-06 20:14:42
  * @FilePath: \event-calculator\src\Components\Event\Event.js
  * @Description:
  */
@@ -122,7 +122,7 @@ const EventContainer = (props) => {
               <Box>
                 <Chip
                   label={person.name}
-                  color="success"
+                  color={person.isCommonParticipant ? "warning" : "success"}
                   size="small"
                   sx={{ mr: 1 }}
                   icon={<PersonIcon />}
@@ -170,7 +170,7 @@ const EventContainer = (props) => {
       </Box>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Button onClick={addParticipant}>新建参与者</Button>
-        <Button onClick={addCommonParticipant}>添加常用参与者</Button>
+        <Button onClick={addCommonParticipant}>选择常用参与者</Button>
       </Box>
       <AddParticipantDialog
         open={isAddOpen}
@@ -180,6 +180,7 @@ const EventContainer = (props) => {
       />
       <CommonParticipantList
         open={isCommonOpen}
+        event={props.eventInfo}
         closeDialog={closeCommonParticipantDialog}
       />
     </Paper>
