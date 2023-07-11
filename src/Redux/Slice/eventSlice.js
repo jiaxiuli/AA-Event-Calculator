@@ -2,36 +2,35 @@
  * @Author: Leo
  * @Date: 2023-07-04 12:22:12
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-06 20:29:41
+ * @LastEditTime: 2023-07-11 19:09:37
  * @FilePath: \event-calculator\src\Redux\Slice\eventSlice.js
  * @Description:
  */
 import { createSlice } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
-import Participant from "../../Class/Participant";
+// import { v4 as uuidv4 } from "uuid";
+// import Participant from "../../Class/Participant";
 
-const getZeroSpendList = () => [
-  {
-    key: uuidv4(),
-    value: 0,
-  },
-];
-
-const commonNameList = [
-  { name: "BBD", id: "leo" },
-  { name: "咪咪", id: "mimi" },
-  { name: "Nancy", id: "nancy" },
-  { name: "Kerry", id: "kerry" },
-  { name: "华哥", id: "keith" },
-  { name: "S哥", id: "stanley" },
-];
+// const getZeroSpendList = () => [
+//   {
+//     key: uuidv4(),
+//     value: 0,
+//   },
+// ];
 
 const initialState = {
   eventList: [],
   eventCounter: 0,
-  commonParticipant: commonNameList.map(
-    (person) => new Participant(person.name, getZeroSpendList(), person.id)
-  ),
+  // commonParticipant: commonNameList.map(
+  //   (person) => new Participant(person.name, getZeroSpendList(), person.id)
+  // ),
+  commonParticipant: [
+    { name: "BBD", id: "leo" },
+    { name: "咪咪", id: "mimi" },
+    { name: "Nancy", id: "nancy" },
+    { name: "Kerry", id: "kerry" },
+    { name: "华哥", id: "keith" },
+    { name: "S哥", id: "stanley" },
+  ],
 };
 
 export const eventSlice = createSlice({

@@ -2,7 +2,7 @@
  * @Author: Leo
  * @Date: 2023-07-05 20:01:31
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-06 20:46:05
+ * @LastEditTime: 2023-07-11 19:20:18
  * @FilePath: \event-calculator\src\Components\CommonParticipantListDialog\CommonParticipantList.js
  * @Description:
  */
@@ -21,11 +21,23 @@ import CommentIcon from "@mui/icons-material/Comment";
 import Button from "@mui/material/Button";
 import { updateCommonParticipantsByList } from "../../Redux/Slice/eventSlice";
 import { useSelector, useDispatch } from "react-redux";
-
+import Participant from "../../Class/Participant";
+import { v4 as uuidv4 } from "uuid";
 import "./CommonParticipantList.scss";
+
+const getZeroSpendList = () => [
+  {
+    key: uuidv4(),
+    value: 0,
+  },
+];
 
 const CommonParticipantList = (props) => {
   const commonList = useSelector((state) => state.event.commonParticipant);
+
+  const commonParticipants = commonList.map(
+    (person) => new Participant(person.name, getZeroSpendList(), person.id)
+  );
 
   const [checked, setChecked] = React.useState([]);
 
@@ -46,7 +58,7 @@ const CommonParticipantList = (props) => {
     const newChecked = [...checked];
 
     if (currentIndex === -1) {
-      newChecked.push({ ...value });
+      newChecked.push(value);
     } else {
       newChecked.splice(currentIndex, 1);
     }
@@ -57,7 +69,7 @@ const CommonParticipantList = (props) => {
     dispatch(
       updateCommonParticipantsByList({
         event: props.event,
-        participantList: [...checked],
+        participantList: checked,
       })
     );
     props.closeDialog();
@@ -69,7 +81,7 @@ const CommonParticipantList = (props) => {
         <DialogTitle sx={{ textAlign: "center" }}>选择常用参与者</DialogTitle>
         <Box>
           <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-            {commonList.map((value) => (
+            {commonParticipants.map((value) => (
               <ListItem
                 key={value.id}
                 secondaryAction={

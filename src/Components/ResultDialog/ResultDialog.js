@@ -2,7 +2,7 @@
  * @Author: Leo
  * @Date: 2023-07-04 21:08:53
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-05 20:35:45
+ * @LastEditTime: 2023-07-11 19:26:41
  * @FilePath: \event-calculator\src\Components\ResultDialog\ResultDialog.js
  * @Description:
  */
@@ -75,7 +75,11 @@ const ResultDialog = (props) => {
               <Box sx={{ mt: 2 }}>
                 {item.result.list.map((ele) => (
                   <List key={ele.key}>
-                    <ListItem>
+                    <ListItem
+                      sx={{
+                        opacity: ele.value === "0.00" ? 0.4 : 1,
+                      }}
+                    >
                       <Chip
                         label={ele.sender.name}
                         color={

@@ -2,7 +2,7 @@
  * @Author: Leo
  * @Date: 2023-07-04 12:47:59
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-06 20:14:42
+ * @LastEditTime: 2023-07-11 18:55:16
  * @FilePath: \event-calculator\src\Components\Event\Event.js
  * @Description:
  */
@@ -111,7 +111,10 @@ const EventContainer = (props) => {
       </Box>
       <Box className="participants-container">
         {props.eventInfo.participants.map((person) => (
-          <Box key={person.id} className="per-participant-container">
+          <Box
+            key={"" + props.eventInfo.id + person.id}
+            className="per-participant-container"
+          >
             <Box
               sx={{
                 display: "flex",
