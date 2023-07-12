@@ -2,7 +2,7 @@
  * @Author: Leo
  * @Date: 2023-07-04 21:08:53
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-11 21:16:55
+ * @LastEditTime: 2023-07-11 21:55:03
  * @FilePath: \event-calculator\src\Components\ResultDialog\ResultDialog.js
  * @Description:
  */
@@ -24,6 +24,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Button from "@mui/material/Button";
 import { clearAll } from "../../Redux/Slice/eventSlice";
 import { useDispatch } from "react-redux";
+import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -43,6 +44,7 @@ const ResultDialog = (props) => {
       open={props.open}
       onClose={props.handleClose}
       TransitionComponent={Transition}
+      sx={{ display: "flex", flexDirection: "column" }}
     >
       <AppBar sx={{ position: "relative" }}>
         <Toolbar>
@@ -62,71 +64,104 @@ const ResultDialog = (props) => {
           </Button>
         </Toolbar>
       </AppBar>
-      <Box>
-        {props.result.map((item) => (
-          <Paper className="event-container" elevation={3} key={item.event.id}>
-            <Box>
-              <Chip
-                label={item.event.name}
-                color="primary"
-                variant="outlined"
-                icon={<TagFacesIcon />}
-              />
-              <Box sx={{ mt: 2 }}>
-                {item.result.list.map((ele) => (
-                  <List key={ele.key}>
-                    <ListItem
-                      sx={{
-                        opacity: ele.value === "0.00" ? 0.4 : 1,
-                      }}
-                    >
-                      <Chip
-                        label={ele.sender.name}
-                        color={
-                          ele.sender.id === item.result.info.personSpendMost.id
-                            ? "success"
-                            : "primary"
-                        }
-                        size="small"
-                        sx={{ mr: 1 }}
-                      />
-                      向
-                      <Chip
-                        label={ele.receiver.name}
-                        color={
-                          ele.receiver.id ===
-                          item.result.info.personSpendMost.id
-                            ? "success"
-                            : "primary"
-                        }
-                        size="small"
-                        sx={{ marginX: 1 }}
-                      />
-                      转账
-                      <Chip
-                        label={"$" + ele.value}
-                        size="small"
-                        sx={{ ml: 1 }}
-                      />
-                    </ListItem>
-                    <Divider />
-                  </List>
-                ))}
-              </Box>
-              <Box sx={{ p: 1 }}>
-                每人平均支出
-                <Chip
-                  label={"$" + item.result.info.averageSpend}
-                  size="small"
-                  color="error"
-                  variant="outlined"
-                  sx={{ ml: 1 }}
-                />
-              </Box>
-            </Box>
-          </Paper>
-        ))}
-        {props.mergedResult.resultList ? (
+      <Box sx={{ flex: 1 }}>
+        {props.result.length ? (
+          props.result.map((item) =>
+            item ? (
+              <Paper
+                className="event-container"
+                elevation={3}
+                key={item.event.id}
+              >
+                <Box>
+                  <Chip
+                    label={item.event.name}
+                    color="primary"
+                    variant="outlined"
+                    icon={<TagFacesIcon />}
+                  />
+                  <Box sx={{ mt: 2 }}>
+                    {item.result.list.map((ele) => (
+                      <List key={ele.key}>
+                        <ListItem
+                          sx={{
+                            opacity: ele.value === "0.00" ? 0.4 : 1,
+                          }}
+                        >
+                          <Chip
+                            label={ele.sender.name}
+                            color={
+                              ele.sender.id ===
+                              item.result.info.personSpendMost.id
+                                ? "success"
+                                : "primary"
+                            }
+                            size="small"
+                            sx={{ mr: 1 }}
+                          />
+                          向
+                          <Chip
+                            label={ele.receiver.name}
+                            color={
+                              ele.receiver.id ===
+                              item.result.info.personSpendMost.id
+                                ? "success"
+                                : "primary"
+                            }
+                            size="small"
+                            sx={{ marginX: 1 }}
+                          />
+                          转账
+                          <Chip
+                            label={"$" + ele.value}
+                            size="small"
+                            sx={{ ml: 1 }}
+                          />
+                        </ListItem>
+                        <Divider />
+                      </List>
+                    ))}
+                  </Box>
+                  <Box sx={{ p: 1 }}>
+                    每人平均支出
+                    <Chip
+                      label={"$" + item.result.info.averageSpend}
+                      size="small"
+                      color="error"
+                      variant="outlined"
+                      sx={{ ml: 1 }}
+                    />
+                  </Box>
+                </Box>
+              </Paper>
+            ) : null
+          )
+        ) : (
+          <Box
+            sx={{
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <ProductionQuantityLimitsIcon
+              sx={{ position: "relative", fontSize: 100 }}
+            ></ProductionQuantityLimitsIcon>
+            <Typography
+              sx={{
+                mt: 2,
+                color: "#757575",
+                fontWeight: "bold",
+                fontSize: "12",
+              }}
+            >
+              先花点钱再来算吧...
+            </Typography>
+          </Box>
+        )}
+        {props.mergedResult && props.mergedResult.resultList ? (
           <Paper className="event-container" elevation={3}>
             <Chip label={"总转账结果"} color="primary" />
             <Box sx={{ mt: 1 }}>

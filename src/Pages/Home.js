@@ -2,7 +2,7 @@
  * @Author: Leo
  * @Date: 2023-07-04 11:53:35
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-11 19:20:25
+ * @LastEditTime: 2023-07-11 21:35:37
  * @FilePath: \event-calculator\src\Pages\Home.js
  * @Description:
  */
@@ -20,8 +20,9 @@ import ResultDialog from "../Components/ResultDialog/ResultDialog";
 import "./Home.scss";
 
 const Home = () => {
-  const events = useSelector((state) => state.event.eventList);
-  const counter = useSelector((state) => state.event.eventCounter);
+  const event = useSelector((state) => state.event);
+  const events = event.eventList;
+  const counter = event.eventCounter;
 
   const [result, setResult] = React.useState([]);
   const [mergedResult, setMergedResult] = React.useState([]);
@@ -36,7 +37,7 @@ const Home = () => {
   const executeCalculate = () => {
     const resultList = calculate(events);
     setResult(resultList);
-    if (events.length > 1) {
+    if (resultList.length > 1) {
       const mergedResultObj = mergeTransfer(resultList);
       setMergedResult(mergedResultObj);
     } else {

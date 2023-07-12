@@ -2,7 +2,7 @@
  * @Author: Leo
  * @Date: 2023-07-04 20:33:55
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-11 21:05:24
+ * @LastEditTime: 2023-07-11 21:34:41
  * @FilePath: \event-calculator\src\Class\Calculate.js
  * @Description:
  */
@@ -29,7 +29,10 @@ const chipColorList = [
 ];
 
 export const calculate = (events) => {
-  const overallResult = events.map((event) => {
+  let overallResult = events.map((event) => {
+    if (!event.participants.length) {
+      return null;
+    }
     const result = {
       info: {},
       list: [],
@@ -75,6 +78,10 @@ export const calculate = (events) => {
       result,
     };
   });
+
+  overallResult = overallResult.filter((item) => Boolean(item));
+
+  console.log(overallResult);
 
   return overallResult;
 };

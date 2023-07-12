@@ -2,27 +2,16 @@
  * @Author: Leo
  * @Date: 2023-07-04 12:22:12
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-11 19:09:37
+ * @LastEditTime: 2023-07-11 21:23:16
  * @FilePath: \event-calculator\src\Redux\Slice\eventSlice.js
  * @Description:
  */
 import { createSlice } from "@reduxjs/toolkit";
-// import { v4 as uuidv4 } from "uuid";
-// import Participant from "../../Class/Participant";
-
-// const getZeroSpendList = () => [
-//   {
-//     key: uuidv4(),
-//     value: 0,
-//   },
-// ];
+import Event from "../../Class/Event";
 
 const initialState = {
-  eventList: [],
-  eventCounter: 0,
-  // commonParticipant: commonNameList.map(
-  //   (person) => new Participant(person.name, getZeroSpendList(), person.id)
-  // ),
+  eventList: [new Event(0)],
+  eventCounter: 1,
   commonParticipant: [
     { name: "BBD", id: "leo" },
     { name: "咪咪", id: "mimi" },
