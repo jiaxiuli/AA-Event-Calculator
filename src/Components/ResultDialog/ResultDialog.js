@@ -2,7 +2,7 @@
  * @Author: Leo
  * @Date: 2023-07-04 21:08:53
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-11 19:26:41
+ * @LastEditTime: 2023-07-11 21:16:55
  * @FilePath: \event-calculator\src\Components\ResultDialog\ResultDialog.js
  * @Description:
  */
@@ -126,6 +126,57 @@ const ResultDialog = (props) => {
             </Box>
           </Paper>
         ))}
+        {props.mergedResult.resultList ? (
+          <Paper className="event-container" elevation={3}>
+            <Chip label={"总转账结果"} color="primary" />
+            <Box sx={{ mt: 1 }}>
+              <List>
+                {props.mergedResult.resultList.map((ele) => (
+                  <Box key={ele.key}>
+                    <ListItem
+                      sx={{
+                        opacity: ele.value === "0.00" ? 0.4 : 1,
+                      }}
+                    >
+                      <Chip
+                        label={ele.sender.name}
+                        size="small"
+                        sx={{
+                          mr: 1,
+                          background:
+                            props.mergedResult?.nameToColor?.find(
+                              (item) => item.nameId === ele.sender.id
+                            )?.color || "#00b8d4",
+                          color: "#ffffff",
+                        }}
+                      />
+                      向
+                      <Chip
+                        label={ele.receiver.name}
+                        size="small"
+                        sx={{
+                          marginX: 1,
+                          background:
+                            props.mergedResult?.nameToColor?.find(
+                              (item) => item.nameId === ele.receiver.id
+                            )?.color || "#00b8d4",
+                          color: "#ffffff",
+                        }}
+                      />
+                      转账
+                      <Chip
+                        label={"$" + ele.value}
+                        size="small"
+                        sx={{ ml: 1 }}
+                      />
+                    </ListItem>
+                    <Divider />
+                  </Box>
+                ))}
+              </List>
+            </Box>
+          </Paper>
+        ) : null}
       </Box>
     </Dialog>
   );

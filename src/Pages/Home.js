@@ -37,8 +37,10 @@ const Home = () => {
     const resultList = calculate(events);
     setResult(resultList);
     if (events.length > 1) {
-      const mergedResultList = mergeTransfer(resultList);
-      setMergedResult(mergedResultList);
+      const mergedResultObj = mergeTransfer(resultList);
+      setMergedResult(mergedResultObj);
+    } else {
+      setMergedResult(null);
     }
     openResultDialog();
   };
