@@ -2,7 +2,7 @@
  * @Author: Leo
  * @Date: 2023-07-04 20:33:55
  * @LastEditors: Leo
- * @LastEditTime: 2023-07-11 21:34:41
+ * @LastEditTime: 2023-07-11 21:56:21
  * @FilePath: \event-calculator\src\Class\Calculate.js
  * @Description:
  */
@@ -80,8 +80,6 @@ export const calculate = (events) => {
   });
 
   overallResult = overallResult.filter((item) => Boolean(item));
-
-  console.log(overallResult);
 
   return overallResult;
 };
